@@ -1,9 +1,9 @@
 const TeleBot = require("telebot");
 const axios = require("axios");
-const ENDPOINT = "https://fakestoreapi.com/products/1";
+const token = require("./token")
 const buttons = require("./buttons");
 const bot = new TeleBot({
-  token: "5444295484:AAE_U7oTe17V1PrWNhDqHPoG1lf4tATrXHE",
+  token: token,
   usePlugins: ["commandButton"],
 });
 
