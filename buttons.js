@@ -1,11 +1,7 @@
 const buttons = {
   showProducts: {
-    label: "Productos",
+    label: "🛍️ Productos",
     command: "/showProducts",
-  },
-  help: {
-    label: "❓ Help",
-    command: "/help",
   },
   payment: {
     label: "💳 Métodos de pago",
@@ -15,7 +11,7 @@ const buttons = {
     label: "🚚 Delivery",
     command: "/delivery",
   },
-  criptomonedas: {
+  crypto: {
     label: "₿ Crypto",
     command: "/crypto",
   },
@@ -28,7 +24,7 @@ const buttons = {
     command: "/transfer",
   },
   back: {
-    label: "⬅️ Go back",
+    label: "⬅️ Regresar",
     command: "/start",
   },
   searchProduct: {
