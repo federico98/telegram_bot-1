@@ -23,9 +23,13 @@ const buttons = {
     label: "🏦 Transferencia",
     command: "/transfer",
   },
-  back: {
+  backToMain: {
     label: "⬅️ Regresar",
     command: "/mainMenu",
+  },
+  backToProducts: {
+    label: "⬅️ Regresar a productos",
+    command: "/showProducts",
   },
   searchProduct: {
     label: "🔍 Buscar producto",

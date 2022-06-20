@@ -37,8 +37,16 @@ const productsMenu = bot.inlineKeyboard([
     }),
   ],
   [
-    bot.inlineButton(buttons.back.label, {
-      callback: buttons.back.command,
+    bot.inlineButton(buttons.backToMain.label, {
+      callback: buttons.backToMain.command,
+    }),
+  ],
+]);
+
+const productResultMenu = bot.inlineKeyboard([
+  [
+    bot.inlineButton(buttons.backToProducts.label, {
+      callback: buttons.backToProducts.command,
     }),
   ],
 ]);
@@ -50,13 +58,19 @@ let waitUserInput = false;
 async function searchProduct(msg) {
   if (waitUserInput) {
     let id = msg.from.id;
+    const replyMarkup = productResultMenu;
     bot.sendMessage(id, "buscando...");
-    const response = await axios.get(
-      `https://fakestoreapi.com/products/${msg.text}`
-    );
-    const text = `${response.data.title}\n\n${response.data.description}\n\n${response.data.price} $${response.data.image}`;
-    bot.sendMessage(id, text);
-    waitUserInput = false;
+    try {
+      const response = await axios.get(
+        `https://fakestoreapi.com/products/${msg.text}`
+      );
+      const text = `${response.data.title}\n\n${response.data.description}\n\n${response.data.price} $${response.data.image}`;
+      bot.sendMessage(id, text, { replyMarkup });
+      waitUserInput = false;
+    } catch (error) {
+      bot.sendMessage(id, "no se encontro el producto");
+      waitUserInput = false;
+    }
   }
 }
 
@@ -70,11 +84,10 @@ async function getProducts(msg) {
     );
     const text = response.data
       .map((item) => {
-        return `${item.id} ${item.title} ${item.price}`;
+        return `${item.id} - ${item.title} ${item.price}`;
       })
       .join("\n");
     bot.sendMessage(id, text, { replyMarkup });
-    console.log(text);
   } catch (error) {
     console.log(error);
   }
