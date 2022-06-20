@@ -25,7 +25,7 @@ const buttons = {
   },
   back: {
     label: "⬅️ Regresar",
-    command: "/start",
+    command: "/mainMenu",
   },
   searchProduct: {
     label: "🔍 Buscar producto",
