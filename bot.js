@@ -62,9 +62,10 @@ async function searchProduct(msg) {
     bot.sendMessage(id, "buscando...");
     try {
       const response = await axios.get(
-        `https://fakestoreapi.com/products/${msg.text}`
+        // `https://fakestoreapi.com/products/${msg.text}`
+        `http://localhost:8888/dbGetItems?id=${msg.text}`
       );
-      const text = `${response.data.title}\n\n${response.data.description}\n\n${response.data.price} $${response.data.image}`;
+      const text = `${response.data[0].title}\n\n${response.data[0].description}\n\n${response.data[0].price} $ ${response.data[0].image}`;
       bot.sendMessage(id, text, { replyMarkup });
       waitUserInput = false;
     } catch (error) {
@@ -80,7 +81,8 @@ async function getProducts(msg) {
   const replyMarkup = productsMenu;
   try {
     const response = await axios.get(
-      "https://fakestoreapi.com/products?limit=20"
+      // "https://fakestoreapi.com/products?limit=20"
+      "http://localhost:8888/dbGetItems"
     );
     const text = response.data
       .map((item) => {
@@ -95,6 +97,7 @@ async function getProducts(msg) {
 // mensaje de bienvenida
 bot.on("/start", (msg) => {
   const replyMarkup = mainMenu;
+  console.log(msg.from.id)
   bot.sendMessage(
     msg.from.id,
     "Bienvenido a nuestra tienda!\nSeleccione una de las siguientes opciones:",
