@@ -1,111 +1,25 @@
 const TeleBot = require("telebot");
-const axios = require("axios");
-const token = require("./token");
-const buttons = require("./buttons");
+require("dotenv").config();
 const bot = new TeleBot({
-  token: token,
+  token: process.env.TOKEN,
   usePlugins: ["commandButton"],
 });
+module.exports = bot;
 
-// menu principal
-const mainMenu = bot.inlineKeyboard([
-  [
-    bot.inlineButton(buttons.showProducts.label, {
-      callback: buttons.showProducts.command,
-    }),
-  ],
-  [
-    bot.inlineButton(buttons.delivery.label, {
-      callback: buttons.delivery.command,
-    }),
-  ],
-  [
-    bot.inlineButton(buttons.payment.label, {
-      callback: buttons.payment.command,
-    }),
-  ],
-]);
-
-// submenu de productos
-const productsMenu = bot.inlineKeyboard([
-  [
-    bot.inlineButton(buttons.searchProduct.label, {
-      callback: buttons.searchProduct.command,
-    }),
-    bot.inlineButton(buttons.addToCart.label, {
-      callback: buttons.addToCart.command,
-    }),
-  ],
-  [
-    bot.inlineButton(buttons.backToMain.label, {
-      callback: buttons.backToMain.command,
-    }),
-  ],
-]);
-
-const productResultMenu = bot.inlineKeyboard([
-  [
-    bot.inlineButton(buttons.backToProducts.label, {
-      callback: buttons.backToProducts.command,
-    }),
-  ],
-]);
+const {
+  searchProduct,
+  getProducts,
+  postUser,
+  addToCart,
+  getCart,
+} = require("./messages");
 
 // variable auxiliar para esperar input de usuario
-let waitUserInput = false;
+let waitUserInputSearch = false;
+let waitUserInputCart = false;
 
-// funcion para buscar producto
-async function searchProduct(msg) {
-  if (waitUserInput) {
-    let id = msg.from.id;
-    const replyMarkup = productResultMenu;
-    bot.sendMessage(id, "buscando...");
-    try {
-      const response = await axios.get(
-        // `https://fakestoreapi.com/products/${msg.text}`
-        `http://localhost:8888/dbGetItems?id=${msg.text}`
-      );
-      const text = `${response.data[0].title}\n\n${response.data[0].description}\n\n${response.data[0].price} $ ${response.data[0].image}`;
-      bot.sendMessage(id, text, { replyMarkup });
-      waitUserInput = false;
-    } catch (error) {
-      bot.sendMessage(id, "no se encontro el producto");
-      waitUserInput = false;
-    }
-  }
-}
-
-// funcion para obterner los 20 productos
-async function getProducts(msg) {
-  let id = msg.from.id;
-  const replyMarkup = productsMenu;
-  try {
-    const response = await axios.get(
-      // "https://fakestoreapi.com/products?limit=20"
-      "http://localhost:8888/dbGetItems"
-    );
-    const text = response.data
-      .map((item) => {
-        return `${item.id} - ${item.title} ${item.price}`;
-      })
-      .join("\n");
-    bot.sendMessage(id, text, { replyMarkup });
-  } catch (error) {
-    console.log(error);
-  }
-}
 // mensaje de bienvenida
-bot.on("/start", (msg) => {
-  const replyMarkup = mainMenu;
-  console.log(msg.from.id)
-  bot.sendMessage(
-    msg.from.id,
-    "Bienvenido a nuestra tienda!\nSeleccione una de las siguientes opciones:",
-    {
-      replyMarkup,
-    }
-  );
-});
+bot.on("/start", postUser);
 
 // mostrar el menu principal
 bot.on(["/mainMenu"], (msg) => {
@@ -122,11 +36,32 @@ bot.on("/showProducts", getProducts);
 bot.on("/searchProduct", (msg) => {
   let id = msg.from.id;
   bot.sendMessage(id, "introduzca el numero del producto que desea buscar");
-  waitUserInput = true;
+  waitUserInputSearch = true;
 });
 
 // buscar producto por id, explicacion y prueba del regex: https://regex101.com/r/MDTN6R/1
-bot.on(/^1?\d$|^20$/, searchProduct);
+bot.on(/^1?\d$|^20$/, (msg) => {
+  if (waitUserInputSearch) {
+    searchProduct(msg);
+  }
+});
+
+bot.on("/addToCart", (msg) => {
+  let id = msg.from.id;
+  bot.sendMessage(
+    id,
+    "introduzca los numeros de los items que desea agregar al carrito"
+  );
+  waitUserInputCart = true;
+});
+
+bot.on("text", (msg) => {
+  if (waitUserInputCart) {
+    addToCart(msg);
+  }
+});
+
+bot.on("/goToCart", getCart);
 
 bot.on("callbackQuery", (msg) => {
   console.log("callbackQuery data:", msg.data);
