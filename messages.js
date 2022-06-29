@@ -87,4 +87,10 @@ async function getCart(msg) {
   }
 }
 
-module.exports = { searchProduct, getProducts, postUser, addToCart, getCart };
+function showMainMenu(msg) {
+  const replyMarkup = mainMenu;
+  bot.sendMessage(msg.from.id, "Seleccione una de las siguientes opciones:", {
+    replyMarkup,
+  });
+}
+module.exports = { searchProduct, getProducts, postUser, addToCart, getCart, showMainMenu };

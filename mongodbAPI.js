@@ -1,9 +1,10 @@
 const axios = require("axios");
 
 const mongodbAPI = axios.create({
-  baseURL: "http://localhost:8888/",
+  // baseURL: "http://localhost:8888/",
+  baseURL: "https://mongo-api-telebot-5a78b8.netlify.app/",
   timeout: 10000,
-  headers: { "X-Custom-Header": "foobar" },
+  // headers: { "X-Custom-Header": "foobar" },
 });
 
 const GET_ITEMS = "dbGetItems";
@@ -50,7 +51,7 @@ async function apiPostUser(msg) {
       username,
     });
   } catch (error) {
-    console.log(error);
+    console.log('Timeout');
   }
 }
 

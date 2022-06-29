@@ -12,6 +12,7 @@ const {
   postUser,
   addToCart,
   getCart,
+  showMainMenu,
 } = require("./messages");
 
 // variable auxiliar para esperar input de usuario
@@ -22,12 +23,7 @@ let waitUserInputCart = false;
 bot.on("/start", postUser);
 
 // mostrar el menu principal
-bot.on(["/mainMenu"], (msg) => {
-  const replyMarkup = mainMenu;
-  bot.sendMessage(msg.from.id, "Seleccione una de las siguientes opciones:", {
-    replyMarkup,
-  });
-});
+bot.on(["/mainMenu"], showMainMenu);
 
 // mostrar los 20 productos
 bot.on("/showProducts", getProducts);
