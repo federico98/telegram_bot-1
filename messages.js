@@ -12,6 +12,7 @@ const {
   productsMenu,
   productResultMenu,
   cartMenu,
+  payMenu,
 } = require("./buttons");
 
 // Request a la api para obtener 1 producto por su id
