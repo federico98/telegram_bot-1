@@ -93,4 +93,48 @@ function showMainMenu(msg) {
     replyMarkup,
   });
 }
-module.exports = { searchProduct, getProducts, postUser, addToCart, getCart, showMainMenu };
+
+//TEXTO DELIVERY
+function textDelivery (msg) {
+  let text = '🚚Nuestros horarios y metódos de envíos:\n'
+  +'📌 Envíos al todo el país 🇻🇪\n'
+  +'📌 Trabajamos de Lunes a Sábados de 9am a 4pm⏱\n'
+  +'📌 Pedidos de zonas aledañas, serán despachadas en el día.\n'
+  +'📌 Los despachos al resto del país se realizan los días Lunes y jueves.';
+return bot.sendMessage(msg.from.id, text);
+}
+
+//MENU PAYMENT
+function buttonsPayment (msg) {
+  const replyMarkup = payMenu;
+  bot.sendMessage(msg.from.id, "⬇⚡Info sobre nuestros métodos de pago⚡⬇", {
+    replyMarkup,
+  });
+}
+//InfoCash
+function infoCash (msg){
+  let id = msg.from.id;
+  let text = '✨ Podrá realizar su pago en efectivo cuando reciba su pedido😊(Válido para envíos en zonas cercanas)';
+  return bot.sendMessage(id,text);
+}
+//InfoCrypto
+function infoCrypto (msg) {
+  let id = msg.from.id;
+  let text = '💰 ACEPTAMOS 💰 \n'
+    + '🔥Bitcoin\n'
+    + '🔥Ethereum\n'
+    + '🔥Tether (USDT)' ;
+ return bot.sendMessage(id, text);
+}
+//InfoTransfer
+function infoTransfer (msg) {
+  let id = msg.from.id;
+  let text = '📲 Datos de transferencia \n'
+    + ' Entidad👉 Fake Store\n'
+    + ' Banco👉 FakeStoriApi\n'
+    + ' N° de cuenta👉 0000000000';
+ return bot.sendMessage(id,text);
+}
+
+module.exports = { searchProduct, getProducts, postUser, addToCart, getCart, showMainMenu, textDelivery,
+buttonsPayment, infoCash, infoCrypto, infoTransfer };

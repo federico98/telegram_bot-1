@@ -13,6 +13,11 @@ const {
   addToCart,
   getCart,
   showMainMenu,
+  textDelivery,
+  buttonsPayment,
+  infoCash,
+  infoCrypto,
+  infoTransfer
 } = require("./messages");
 
 // variable auxiliar para esperar input de usuario
@@ -63,5 +68,14 @@ bot.on("callbackQuery", (msg) => {
   console.log("callbackQuery data:", msg.data);
   bot.answerCallbackQuery(msg.id);
 });
-
+//INFO DELIVERY
+bot.on('/delivery', textDelivery);
+//MENU PAYMENT -Info
+bot.on('/payment', buttonsPayment);
+//import cash
+bot.on('/cash', infoCash);
+//import crypto
+bot.on('/crypto', infoCrypto );
+//import transfer
+bot.on('/transfer', infoTransfer);
 bot.connect();
