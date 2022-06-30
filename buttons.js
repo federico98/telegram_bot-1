@@ -102,5 +102,26 @@ const cartMenu = bot.inlineKeyboard([
     }),
   ],
 ]);
+//MENU PAYMENT
+const payMenu = bot.inlineKeyboard([
+  [
+    bot.inlineButton(buttons.cash.label, {
+      callback: buttons.cash.command,
+    }),
+    bot.inlineButton(buttons.crypto.label, {
+      callback: buttons.crypto.command,
+    }),
+  ],
+  [
+    bot.inlineButton(buttons.transfer.label, {
+      callback: buttons.transfer.command,
+    }),
+  ],
+  [
+    bot.inlineButton(buttons.backToMain.label, {
+      callback: buttons.backToMain.command,
+    }),
+  ],
+]);
 
-module.exports ={ mainMenu, productsMenu, productResultMenu, cartMenu };
+module.exports ={ mainMenu, productsMenu, productResultMenu, cartMenu, payMenu };
