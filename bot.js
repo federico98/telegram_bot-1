@@ -18,6 +18,7 @@ const {
   infoCash,
   infoCrypto,
   infoTransfer,
+  printBill,
 } = require("./messages");
 
 // variable auxiliar para esperar input de usuario
@@ -86,4 +87,8 @@ bot.on("/cash", infoCash);
 bot.on("/crypto", infoCrypto);
 //import transfer
 bot.on("/transfer", infoTransfer);
+
+// imprimir factura
+bot.on("/printBill", printBill);
+
 bot.connect();

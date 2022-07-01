@@ -5,6 +5,7 @@ const {
   apiPostUser,
   apiPostCart,
   apiGetCart,
+  apiDeleteCart,
 } = require("./mongodbAPI");
 
 const {
@@ -13,6 +14,7 @@ const {
   productResultMenu,
   cartMenu,
   payMenu,
+  billMenu,
 } = require("./buttons");
 
 // Request a la api para obtener 1 producto por su id
@@ -25,7 +27,7 @@ async function searchProduct(msg) {
   if (!regex.test(userInput)) {
     replyMarkup = productsMenu;
     bot.sendMessage(
-      msg.from.id,
+      userId,
       "⚠️Error, debe introducir solamente el numero del producto que desea buscar. Ej: 1.\nSeleccione una opción",
       { replyMarkup }
     );
@@ -44,7 +46,7 @@ async function searchProduct(msg) {
 
 // Request a la api para obtener el listado de productos e imprimirlos
 async function getProducts(msg) {
-  let id = msg.from.id;
+  const id = msg.from.id;
   const replyMarkup = productsMenu;
   try {
     const text = await apiGetProducts();
@@ -105,8 +107,9 @@ async function addToCart(msg) {
 // imprime los items en el carrito del usuario
 async function getCart(msg) {
   try {
+    const replyMarkup = billMenu;
     const text = await apiGetCart(msg);
-    bot.sendMessage(msg.from.id, text);
+    bot.sendMessage(msg.from.id, text, { replyMarkup });
   } catch (error) {
     console.log(error);
   }
@@ -121,7 +124,7 @@ function showMainMenu(msg) {
 
 //TEXTO DELIVERY
 function textDelivery(msg) {
-  let text =
+  const text =
     "🚚Nuestros horarios y metódos de envíos:\n" +
     "📌 Envíos al todo el país 🇻🇪\n" +
     "📌 Trabajamos de Lunes a Sábados de 9am a 4pm⏱\n" +
@@ -139,27 +142,38 @@ function buttonsPayment(msg) {
 }
 //InfoCash
 function infoCash(msg) {
-  let id = msg.from.id;
-  let text =
+  const id = msg.from.id;
+  const text =
     "✨ Podrá realizar su pago en efectivo cuando reciba su pedido😊(Válido para envíos en zonas cercanas)";
   return bot.sendMessage(id, text);
 }
 //InfoCrypto
 function infoCrypto(msg) {
-  let id = msg.from.id;
-  let text =
+  const id = msg.from.id;
+  const text =
     "💰 ACEPTAMOS 💰 \n" + "🔥Bitcoin\n" + "🔥Ethereum\n" + "🔥Tether (USDT)";
   return bot.sendMessage(id, text);
 }
 //InfoTransfer
 function infoTransfer(msg) {
-  let id = msg.from.id;
-  let text =
+  const id = msg.from.id;
+  const text =
     "📲 Datos de transferencia \n" +
     " Entidad👉 Fake Store\n" +
     " Banco👉 FakeStoriApi\n" +
     " N° de cuenta👉 0000000000";
   return bot.sendMessage(id, text);
+}
+
+async function printBill(msg){
+    //
+    // PEDIR DATOS, VALIDARLOS Y ENVIAR CORREO AQUI
+    //
+  try {
+    await apiDeleteCart(msg)
+  } catch (error) {
+   console.log(error)
+  }
 }
 
 module.exports = {
@@ -174,4 +188,5 @@ module.exports = {
   infoCash,
   infoCrypto,
   infoTransfer,
+  printBill,
 };

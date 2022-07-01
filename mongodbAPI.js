@@ -11,27 +11,27 @@ const GET_ITEMS = "dbGetItems";
 const POST_USER = "dbPostUsers";
 const POST_CART = "dbPostCart";
 const GET_CART = "dbGetCart";
+const DELETE_CART = "dbDeleteCart";
 
 // funcion para buscar producto
 async function apiSearchProduct(msg) {
   try {
     const response = await mongodbAPI.get(`${GET_ITEMS}?id=${msg.text}`);
     const text = `${response.data[0].title}\n\n${response.data[0].description}\n\n${response.data[0].price} $ ${response.data[0].image}`;
-    return text
-  } catch (error) {
-  }
+    return text;
+  } catch (error) {}
 }
 
 // funcion para obterner los 20 productos
 async function apiGetProducts() {
   try {
     const response = await mongodbAPI.get(GET_ITEMS);
-    const text= response.data
+    const text = response.data
       .map((item) => {
         return `${item.id} - ${item.title} ${item.price}`;
       })
       .join("\n");
-    return text
+    return text;
   } catch (error) {
     console.log(error);
   }
@@ -51,7 +51,7 @@ async function apiPostUser(msg) {
       username,
     });
   } catch (error) {
-    console.log('Timeout');
+    console.log("Timeout");
   }
 }
 
@@ -74,15 +74,31 @@ async function apiGetCart(msg) {
   const userId = msg.from.id;
   try {
     let response = await mongodbAPI.get(`${GET_CART}?userId=${userId}`);
-    const text= response.data
+    const text = response.data
       .map((item) => {
         return `${item.id} - ${item.title} ${item.price}`;
       })
       .join("\n");
-    return text
+    return text;
   } catch (error) {
     console.log(error);
   }
 }
 
-module.exports = { apiSearchProduct, apiGetProducts, apiPostUser, apiPostCart, apiGetCart };
+async function apiDeleteCart(msg) {
+  const userId = msg.from.id;
+  try {
+    await mongodbAPI.delete(DELETE_CART, {data: { userId }});
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+module.exports = {
+  apiSearchProduct,
+  apiGetProducts,
+  apiPostUser,
+  apiPostCart,
+  apiGetCart,
+  apiDeleteCart,
+};

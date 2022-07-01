@@ -44,6 +44,10 @@ const buttons = {
     label: "🛒 Ir al carrito",
     command: "/goToCart",
   },
+  printBill: {
+    label: "🧾 Imprimir factura",
+    command: "/printBill",
+  }
 };
 
 // menu principal
@@ -124,4 +128,16 @@ const payMenu = bot.inlineKeyboard([
   ],
 ]);
 
-module.exports ={ mainMenu, productsMenu, productResultMenu, cartMenu, payMenu };
+// Menu para Imprimir la factura
+const billMenu = bot.inlineKeyboard([
+  [
+    bot.inlineButton(buttons.backToProducts.label, {
+      callback: buttons.backToProducts.command,
+    }),
+    bot.inlineButton(buttons.printBill.label, {
+      callback: buttons.printBill.command,
+    }),
+  ],
+]);
+
+module.exports ={ mainMenu, productsMenu, productResultMenu, cartMenu, payMenu, billMenu };
