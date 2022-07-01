@@ -17,7 +17,7 @@ const {
   buttonsPayment,
   infoCash,
   infoCrypto,
-  infoTransfer
+  infoTransfer,
 } = require("./messages");
 
 // variable auxiliar para esperar input de usuario
@@ -36,46 +36,54 @@ bot.on("/showProducts", getProducts);
 // esperar input de usuario para buscar el producto
 bot.on("/searchProduct", (msg) => {
   let id = msg.from.id;
-  bot.sendMessage(id, "introduzca el numero del producto que desea buscar");
+  bot.sendMessage(
+    id,
+    "introduzca el numero del producto que desea buscar. Ej: 1"
+  );
   waitUserInputSearch = true;
 });
 
-// buscar producto por id, explicacion y prueba del regex: https://regex101.com/r/MDTN6R/1
-bot.on(/^1?\d$|^20$/, (msg) => {
+// buscar producto por id
+bot.on("text", (msg) => {
   if (waitUserInputSearch) {
     searchProduct(msg);
+    waitUserInputSearch = false;
   }
 });
 
+// esperar input de usuario para añadir el producto al carrito
 bot.on("/addToCart", (msg) => {
   let id = msg.from.id;
   bot.sendMessage(
     id,
-    "introduzca los numeros de los items que desea agregar al carrito"
+    "introduzca los numeros de los items que desea agregar al carrito, separados por comas. Ej: 1,2,3"
   );
   waitUserInputCart = true;
 });
 
+// añade los productos al carrito por su id
 bot.on("text", (msg) => {
   if (waitUserInputCart) {
     addToCart(msg);
+    waitUserInputCart = false;
   }
 });
 
+// mostrar el carrito del usuario
 bot.on("/goToCart", getCart);
 
+// calback que recibe los comandos de los botones
 bot.on("callbackQuery", (msg) => {
-  console.log("callbackQuery data:", msg.data);
   bot.answerCallbackQuery(msg.id);
 });
 //INFO DELIVERY
-bot.on('/delivery', textDelivery);
+bot.on("/delivery", textDelivery);
 //MENU PAYMENT -Info
-bot.on('/payment', buttonsPayment);
+bot.on("/payment", buttonsPayment);
 //import cash
-bot.on('/cash', infoCash);
+bot.on("/cash", infoCash);
 //import crypto
-bot.on('/crypto', infoCrypto );
+bot.on("/crypto", infoCrypto);
 //import transfer
-bot.on('/transfer', infoTransfer);
+bot.on("/transfer", infoTransfer);
 bot.connect();
